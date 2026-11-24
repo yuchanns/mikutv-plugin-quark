@@ -1,0 +1,92 @@
+{
+  "id": "quark",
+  "name": "Quark Drive",
+  "description": "Personal cloud video library.",
+  "kind": "source",
+  "version": "1.0.0",
+  "apiVersion": 1,
+  "minAppVersion": "0.1.4",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "artwork": {
+    "cover": "cover.png"
+  },
+  "permissions": {
+    "network": [
+      "*.quark.cn",
+      "*.uc.cn",
+      "*.ucweb.com",
+      "*.alicdn.com",
+      "*.aliyuncs.com",
+      "*.aliyunpds.com"
+    ],
+    "artwork": {
+      "hosts": [
+        "drive-pc.quark.cn"
+      ],
+      "referer": "https://pan.quark.cn/"
+    }
+  },
+  "authentication": {
+    "methods": [
+      "qrCode"
+    ],
+    "presentation": {
+      "accountSubtitle": "Personal cloud video library",
+      "guestTitle": "Quark Drive",
+      "guestDescription": "Sign in with the Quark app."
+    }
+  },
+  "presentation": {
+    "creatorGroupTitle": "Folders",
+    "search": {
+      "hint": "Search videos and folders",
+      "seriesLabel": "Collection"
+    }
+  },
+  "capabilities": [
+    "account.signIn",
+    "catalog.browse",
+    "catalog.item",
+    "catalog.search",
+    "catalog.library",
+    "account.history",
+    "playback.resolve",
+    "playback.subtitles",
+    "playback.progress"
+  ],
+  "locales": {
+    "zh-Hans": {
+      "name": "夸克网盘",
+      "description": "个人云端视频库",
+      "authentication": {
+        "accountSubtitle": "个人云端视频库",
+        "guestTitle": "夸克网盘",
+        "guestDescription": "使用夸克 App 扫码登录。"
+      },
+      "presentation": {
+        "creatorGroupTitle": "文件夹",
+        "search": {
+          "hint": "搜索网盘视频与文件夹",
+          "seriesLabel": "合集"
+        }
+      }
+    },
+    "ja": {
+      "name": "Quark Drive",
+      "description": "クラウド動画ライブラリ",
+      "authentication": {
+        "accountSubtitle": "クラウド動画ライブラリ",
+        "guestTitle": "Quark Drive",
+        "guestDescription": "Quark アプリでサインイン。"
+      },
+      "presentation": {
+        "creatorGroupTitle": "フォルダ",
+        "search": {
+          "hint": "動画やフォルダを検索",
+          "seriesLabel": "コレクション"
+        }
+      }
+    }
+  }
+}
