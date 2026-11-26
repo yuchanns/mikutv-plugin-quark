@@ -18,6 +18,7 @@ import {
   qualityHintFromEntry,
   searchDrive,
 } from "./api.js";
+import { useCacheScope } from "./cache.js";
 import { findHistoryProgress, getHistoryItems } from "./history.js";
 import { t } from "./i18n.js";
 
@@ -182,6 +183,7 @@ function pushUniqueItems(target, seen, items) {
 
 export async function browse(req) {
   requireSignedIn(req);
+  useCacheScope(req);
   const copy = t();
   const collection = String((req && req.collection) || "");
   const filter = String((req && req.filter) || "");
@@ -386,6 +388,7 @@ export async function browse(req) {
 
 export async function getItem(req) {
   requireSignedIn(req);
+  useCacheScope(req);
   const copy = t();
   const kind = String((req && req.kind) || "video");
   const id = String((req && req.id) || "").trim();
@@ -465,6 +468,7 @@ export async function getItem(req) {
 
 export async function search(req) {
   requireSignedIn(req);
+  useCacheScope(req);
   const query = String((req && req.query) || "").trim();
   const kind = String((req && req.kind) || "all");
   const page = Math.max(1, parseInt(String((req && req.cursor) || "1"), 10) || 1);

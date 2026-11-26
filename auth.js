@@ -11,6 +11,7 @@ import {
   normalizeHTTPS,
   qs,
 } from "./api.js";
+import { cacheClearAll } from "./cache.js";
 import { t } from "./i18n.js";
 
 const CAS_BASE = "https://uop.quark.cn/cas/ajax";
@@ -315,6 +316,7 @@ export async function restoreAccount(secret) {
 }
 
 export async function signOut() {
+  cacheClearAll();
   try {
     await fetch(ACCOUNT_LOGOUT_URL, {
       method: "GET",

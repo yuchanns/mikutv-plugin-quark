@@ -18,6 +18,7 @@ import {
   normalizeHTTPS,
   stripExtension,
 } from "./api.js";
+import { useCacheScope } from "./cache.js";
 import { collectSeriesVideos } from "./catalog.js";
 import { findHistoryProgress, recordHistoryEntry } from "./history.js";
 import { t } from "./i18n.js";
@@ -180,6 +181,7 @@ export async function resolvePlayback(req) {
   if (!req || (!req.signedIn && !req.secret)) {
     throw { code: "signIn", message: "Sign in to Quark Drive first." };
   }
+  useCacheScope(req);
   const copy = t();
   const ref = (req && req.ref) || {};
   let playFid = String((req && req.partID) || "").trim();
@@ -366,6 +368,7 @@ export async function resolvePlayback(req) {
 }
 
 export async function reportPlayback(req) {
+  useCacheScope(req);
   const data = (req && req.data) || {};
   const ref = data.ref || {};
   const isSeries = ref.kind === "series";

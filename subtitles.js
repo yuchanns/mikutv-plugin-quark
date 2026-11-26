@@ -1,6 +1,7 @@
 // External subtitle fetcher and VTT / SRT / ASS(SSA) parser.
 
 import { PC_UA, QUARK_ORIGIN, QUARK_REFERER, fetchDownloadInfo, normalizeHTTPS } from "./api.js";
+import { TTL_SUBTITLE_CUES, cacheGetJSON, cacheKey, cacheSetJSON, useCacheScope } from "./cache.js";
 
 function parseTimestamp(raw) {
   const clean = String(raw || "").trim().replace(",", ".");
@@ -114,14 +115,20 @@ export function parseSubtitleText(raw) {
 }
 
 export async function readSubtitles(req) {
+  useCacheScope(req);
   const track = (req && req.track) || {};
   const urls = track.resource && Array.isArray(track.resource.urls) ? track.resource.urls : [];
   let subURL = urls[0] || "";
 
+  // Parsed cues of a drive subtitle file are immutable per fid; the signed download URL is never cached.
+  let cuesKey = "";
   // Support resolving lazy fid-based subtitle track IDs ("sub:<fid>") on demand.
   if (String(track.id || "").startsWith("sub:")) {
     const fid = String(track.id).slice(4);
     if (fid && (!subURL || subURL.indexOf("drive-pc.quark.cn") >= 0)) {
+      cuesKey = cacheKey("subs", fid);
+      const cached = cacheGetJSON(cuesKey);
+      if (cached && Array.isArray(cached.cues)) return cached;
       const infos = await fetchDownloadInfo([fid]);
       const resolved = infos[0] && normalizeHTTPS(infos[0].download_url);
       if (resolved) subURL = resolved;
@@ -146,5 +153,7 @@ export async function readSubtitles(req) {
     throw { code: "network", message: `Subtitle HTTP ${resp.status}` };
   }
   const text = await resp.text();
-  return { cues: parseSubtitleText(text) };
+  const result = { cues: parseSubtitleText(text) };
+  if (cuesKey && result.cues.length > 0) cacheSetJSON(cuesKey, result, TTL_SUBTITLE_CUES);
+  return result;
 }
